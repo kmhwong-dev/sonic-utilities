@@ -322,7 +322,7 @@ class SFPShow(object):
     def convert_sfp_info_to_output_string(self, sfp_info_dict, sfp_firmware_info_dict):
         indent = ' ' * 8
         output = ''
-        is_sfp_cmis = is_transceiver_cmis(sfp_info_dict)
+        is_sfp_cmis = is_transceiver_cmis(sfp_info_dict) // kmhwong
         is_sfp_c_cmis = 'supported_max_tx_power' in sfp_info_dict
 
         # Get the appropriate data map for this transceiver type
@@ -479,7 +479,7 @@ class SFPShow(object):
             output = "SFP EEPROM Not detected\n"
             return output
 
-        sfp_info_dict = state_db.get_all(state_db.STATE_DB, 'TRANSCEIVER_INFO|{}'.format(interface_name))
+        sfp_info_dict = state_db.get_all(state_db.STATE_DB, 'TRANSCEIVER_INFO|{}'.format(interface_name)) // kmhwong
         sfp_firmware_info_dict = state_db.get_all(state_db.STATE_DB, 'TRANSCEIVER_FIRMWARE_INFO|{}'.format(first_subport))
         if sfp_info_dict:
             is_sfp_cmis = is_transceiver_cmis(sfp_info_dict)
@@ -800,8 +800,11 @@ def doctor(port, namespace):
             sys.exit(1)
 
     sfp = SFPShow(port, namespace)
-    sfp.get_eeprom()
-    sfp.display_eeprom()
+    lane_count = get_value_from_db_by_field("STATE_DB", "TRANSCEIVER_INFO", "host_lane_count", port_name)
+    lane_count_config = get_value_from_db_by_field("CONFIG_DB", "TRANSCEIVER_INFO", "host_lane_count", port_name)
+
+    # I think we need a dict to store all the fields we need to check and get the value from the STATE_DB and CONFIG_DB and compare
+    
 
 # 'presence' subcommand
 

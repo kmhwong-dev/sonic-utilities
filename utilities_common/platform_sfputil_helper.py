@@ -198,7 +198,7 @@ def get_host_lane_count(port_name):
     return lane_count
 
 
-def get_media_lane_count(port_name):
+def get_media_lane_count(port_name): // kmhwong
 
     lane_count = get_value_from_db_by_field("STATE_DB", "TRANSCEIVER_INFO", "media_lane_count", port_name)
 
